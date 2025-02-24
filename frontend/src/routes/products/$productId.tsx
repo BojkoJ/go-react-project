@@ -9,8 +9,17 @@ import {
 	useSuspenseQuery,
 } from "@tanstack/react-query";
 import type { ErrorComponentProps } from "@tanstack/react-router";
-import { ProductNotFoundError } from "../../api/products/getProduct";
-import { productQueryOptions } from "../../queryOptions/productQueryOptions";
+import {
+	getProduct,
+	ProductNotFoundError,
+} from "../../api/products/getProduct";
+import { queryOptions } from "@tanstack/react-query";
+
+const productQueryOptions = (productId: string) =>
+	queryOptions({
+		queryKey: ["products", { productId }],
+		queryFn: () => getProduct(productId),
+	});
 
 export const Route = createFileRoute("/products/$productId")({
 	loader: ({ context: { queryClient }, params: { productId } }) => {
@@ -52,7 +61,6 @@ function ProductComponent() {
 
 	return (
 		<div className='space-y-2'>
-			<p>One Product:</p>
 			<h4 className='text-xl font-bold underline'>{product.name}</h4>
 			<div className='text-sm'>{product.description}</div>
 		</div>
