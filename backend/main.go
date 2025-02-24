@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -54,6 +55,7 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{"message": "Hello, World!"}) // Vrátíme JSON odpověď
 	})
 
+	// route for all products
 	r.GET("/products", func(c *gin.Context) {
 		cursor, err := collection.Find(context.Background(), bson.D{})
 		if err != nil {
@@ -71,10 +73,31 @@ func main() {
 		c.JSON(http.StatusOK, products)
 	})
 
+	// route for one product, passed in parameter of URL
+	r.GET("/products/:id", func(c *gin.Context) {
+		idParam := c.Param("id")
+
+		// Převod string ID na ObjectID
+		objID, err := primitive.ObjectIDFromHex(idParam)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid product ID format"})
+			return
+		}
+
+		var product Product
+		err = collection.FindOne(context.Background(), bson.M{"_id": objID}).Decode(&product)
+		if err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Product not found"})
+			return
+		}
+
+		c.JSON(http.StatusOK, product)
+	})
+
 	// Endpoint pro přidání produktu
 	r.POST("/products", func(c *gin.Context) {
 		var product Product
-		// Pokud je v requestu validní JSON a odpovídá struktuře Product, 
+		// Pokud je v requestu validní JSON a odpovídá struktuře Product,
 		// Gin automaticky přemapuje data z JSON do našich polí (Name, Description, atd.).
 		if err := c.ShouldBindJSON(&product); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
