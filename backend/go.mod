@@ -1,4 +1,4 @@
-module shop-backend
+module github.com/BojkoJ/go-react-project/backend
 
 go 1.22.2
 
