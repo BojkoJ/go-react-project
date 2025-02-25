@@ -14,6 +14,7 @@ Tento projekt je full-stack eshop využívající Go pro backend a React pro fro
 - **Tailwind CSS** (v4) - Efektivní CSS framework
 - **Axios** - HTTP klient pro API požadavky
 - **Zod** - Schema validační knihovna
+- **Shadcn/ui** - Knihovna předpřipravených React komponent s pěkným stylingem
 
 ### Backend
 
