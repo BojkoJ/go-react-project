@@ -55,7 +55,7 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{"message": "Hello, World!"}) // Vrátíme JSON odpověď
 	})
 
-	// route for all products
+	// Endpoint pro získání všech produktů
 	r.GET("/products", func(c *gin.Context) {
 		cursor, err := collection.Find(context.Background(), bson.D{})
 		if err != nil {
@@ -73,7 +73,7 @@ func main() {
 		c.JSON(http.StatusOK, products)
 	})
 
-	// route for one product, passed in parameter of URL
+	// Endpoint pro získání jednoho produktu podle ID
 	r.GET("/products/:id", func(c *gin.Context) {
 		idParam := c.Param("id")
 
